@@ -374,6 +374,11 @@
       "min_error": "This item has a minimum of {{ min }}",
       "max_error": "This item has a maximum of {{ max }}",
       "step_error": "You can only add this item in increments of {{ step }}"
+    },
+    "best_sellers": {
+      "wishlist_button_label": "Add to wishlist",
+      "cart_button_label": "Add to cart",
+      "wishlist_message": "\"{{ product_name }}\" has been added to your wishlist."
     }
   },
   "localization": {
