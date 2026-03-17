@@ -10,9 +10,9 @@
 {
   "current": {
     "logo_width": 90,
-    "type_header_font": "inter_n4",
+    "type_header_font": "inter_n5",
     "heading_scale": 100,
-    "type_body_font": "inter_n4",
+    "type_body_font": "inter_n5",
     "body_scale": 100,
     "page_width": 1680,
     "spacing_sections": 0,
