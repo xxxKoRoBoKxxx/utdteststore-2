@@ -1,0 +1,28 @@
+{
+  "editor.formatOnSave": false,
+  "editor.codeActionsOnSave": {
+    "source.fixAll.stylelint": "explicit"
+  },
+  "[javascript]": {
+    "editor.formatOnSave": true
+  },
+  "[css]": {
+    "editor.formatOnSave": true
+  },
+  "[liquid]": {
+    "editor.formatOnSave": true
+  },
+  "cSpell.words": [
+    "endcapture",
+    "endfor",
+    "endpaginate",
+    "endschema",
+    "endstylesheet",
+    "gsap",
+    "metaobject",
+    "metaobjects",
+    "stylesheet",
+    "unmute"
+  ],
+  "cssrem.rootFontSize": 16
+}
