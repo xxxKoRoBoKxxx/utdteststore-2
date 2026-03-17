@@ -26,14 +26,18 @@
 
   .best-sellers__container {
     display: flex;
-    gap: 80px;
+    gap: 16px;
   }
 
-  .best-sellers__collections {
+  .best-sellers__collections-wrapper {
+    flex: 1;
     display: flex;
     flex-direction: column;
     justify-content: center;
-    flex: 1;
+  }
+
+  .best-sellers__collections {
+    padding-inline: 64px;
   }
 
   .best-sellers__collection-item {
@@ -309,44 +313,45 @@
 <div class="best-sellers-{{ section.id }}">
   {%- if section.blocks.size > 0 -%}
     <div class="best-sellers__container page-width">
-      <div class="best-sellers__collections">
-        {%- if section.settings.label != blank or section.settings.title != blank -%}
-          <div class="best-sellers__header">
-            {%- if section.settings.label != blank -%}
-              <span class="best-sellers__label">{{ section.settings.label }}</span>
-            {%- endif -%}
+      <div class="best-sellers__collections-wrapper">
+        <div class="best-sellers__collections">
+          {%- if section.settings.label != blank or section.settings.title != blank -%}
+            <div class="best-sellers__header">
+              {%- if section.settings.label != blank -%}
+                <span class="best-sellers__label">{{ section.settings.label }}</span>
+              {%- endif -%}
 
-            {%- if section.settings.title != blank -%}
-              <h2 class="best-sellers__title">{{ section.settings.title }}</h2>
-            {%- endif -%}
-          </div>
-        {%- endif -%}
-
-        {%- for block in section.blocks -%}
-          {%- liquid
-            assign collection_title = ''
-
-            if block.settings.text != blank
-              assign collection_title = block.settings.text
-            elsif block.settings.collection != blank
-              assign collection_title = block.settings.collection.title
-            endif
-          -%}
-
-          {%- if collection_title != blank -%}
-            <div
-              class="best-sellers__collection-item{% if forloop.first %} active{% endif %}"
-              data-block-id="{{ block.id }}"
-              data-collection-item
-              {{ block.shopify_attributes }}
-            >
-              {{ collection_title }}
-              {{ 'icon-arrow.svg' | inline_asset_content }}
+              {%- if section.settings.title != blank -%}
+                <h2 class="best-sellers__title">{{ section.settings.title }}</h2>
+              {%- endif -%}
             </div>
           {%- endif -%}
-        {%- endfor -%}
-      </div>
 
+          {%- for block in section.blocks -%}
+            {%- liquid
+              assign collection_title = ''
+
+              if block.settings.text != blank
+                assign collection_title = block.settings.text
+              elsif block.settings.collection != blank
+                assign collection_title = block.settings.collection.title
+              endif
+            -%}
+
+            {%- if collection_title != blank -%}
+              <div
+                class="best-sellers__collection-item{% if forloop.first %} active{% endif %}"
+                data-block-id="{{ block.id }}"
+                data-collection-item
+                {{ block.shopify_attributes }}
+              >
+                {{ collection_title }}
+                {{ 'icon-arrow.svg' | inline_asset_content }}
+              </div>
+            {%- endif -%}
+          {%- endfor -%}
+        </div>
+      </div>
       <div class="best-sellers__product-display">
         {%- for block in section.blocks -%}
           {%- liquid
