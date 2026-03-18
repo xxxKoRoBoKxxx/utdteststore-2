@@ -1,7 +1,7 @@
-{{ 'section-best-sellers.css' | asset_url | stylesheet_tag }}
+{%- if section.blocks.size > 0 -%}
+  {{ 'section-best-sellers.css' | asset_url | stylesheet_tag }}
 
-<div class="best-sellers best-sellers-{{ section.id }}">
-  {%- if section.blocks.size > 0 -%}
+  <div class="best-sellers best-sellers-{{ section.id }}">
     <div class="best-sellers__container page-width">
       <div class="best-sellers__collections-wrapper">
         <div class="best-sellers__collections">
@@ -152,108 +152,105 @@
         <div class="best-sellers__modal-content" data-modal-content></div>
       </div>
     </div>
-  {%- endif -%}
-</div>
+  </div>
 
-<script>
-  (function () {
-    const section = document.querySelector('.best-sellers-{{ section.id }}');
-    if (!section) return;
+  <script>
+    (function () {
+      const section = document.querySelector('.best-sellers-{{ section.id }}');
+      if (!section) return;
 
-    const collectionItems = section.querySelectorAll('[data-collection-item]');
-    const productCards = section.querySelectorAll('[data-product-card]');
-    const modalOverlay = section.querySelector('[data-modal-overlay]');
-    const modalContent = section.querySelector('[data-modal-content]');
-    const modalClose = section.querySelector('[data-modal-close]');
+      const collectionItems = section.querySelectorAll('[data-collection-item]');
+      const productCards = section.querySelectorAll('[data-product-card]');
+      const modalOverlay = section.querySelector('[data-modal-overlay]');
+      const modalContent = section.querySelector('[data-modal-content]');
+      const modalClose = section.querySelector('[data-modal-close]');
 
-    section.addEventListener('click', function (e) {
-      const collectionItem = e.target.closest('[data-collection-item]');
-      if (collectionItem) {
-        const blockId = collectionItem.dataset.blockId;
+      section.addEventListener('click', function (e) {
+        const collectionItem = e.target.closest('[data-collection-item]');
+        if (collectionItem) {
+          const blockId = collectionItem.dataset.blockId;
 
-        collectionItems.forEach((col) => col.classList.remove('active'));
-        collectionItem.classList.add('active');
+          collectionItems.forEach((col) => col.classList.remove('active'));
+          collectionItem.classList.add('active');
 
-        productCards.forEach((card) => {
-          if (card.dataset.blockId === blockId) {
-            card.classList.remove('hidden');
-          } else {
-            card.classList.add('hidden');
-          }
-        });
-        return;
-      }
+          productCards.forEach((card) => {
+            if (card.dataset.blockId === blockId) {
+              card.classList.remove('hidden');
+            } else {
+              card.classList.add('hidden');
+            }
+          });
+          return;
+        }
 
-      const wishlistBtn = e.target.closest('[data-wishlist-btn]');
-      if (wishlistBtn) {
-        const productCard = wishlistBtn.closest('[data-product-card]');
-        const wishlistMessage = productCard.dataset.wishlistMessage;
+        const wishlistBtn = e.target.closest('[data-wishlist-btn]');
+        if (wishlistBtn) {
+          const productCard = wishlistBtn.closest('[data-product-card]');
+          const wishlistMessage = productCard.dataset.wishlistMessage;
 
-        modalContent.textContent = wishlistMessage;
-        modalOverlay.classList.remove('hidden');
-        document.body.style.overflow = 'hidden';
-        return;
-      }
+          modalContent.textContent = wishlistMessage;
+          modalOverlay.classList.remove('hidden');
+          document.body.style.overflow = 'hidden';
+          return;
+        }
 
-      const cartBtn = e.target.closest('[data-cart-btn]');
-      if (cartBtn && !cartBtn.disabled) {
-        const productCard = cartBtn.closest('[data-product-card]');
-        const variantId = productCard.dataset.variantId;
+        const cartBtn = e.target.closest('[data-cart-btn]');
+        if (cartBtn && !cartBtn.disabled) {
+          const productCard = cartBtn.closest('[data-product-card]');
+          const variantId = productCard.dataset.variantId;
 
-        cartBtn.disabled = true;
-        cartBtn.style.opacity = '0.5';
+          cartBtn.disabled = true;
+          cartBtn.style.opacity = '0.5';
 
-        fetch('/cart/add.js', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            id: variantId,
-            quantity: 1,
-          }),
-        })
-          .then((response) => response.json())
-          .then((data) => {
-            console.log('Product added to cart:', data);
-
-            setTimeout(() => {
+          fetch('/cart/add.js', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              id: variantId,
+              quantity: 1,
+            }),
+          })
+            .then((response) => response.json())
+            .then((data) => {
+              console.log('Product added to cart:', data);
+            })
+            .catch((error) => {
+              console.error('Error adding to cart:', error);
+              alert('Error adding product to cart. Please try again.');
+            })
+            .finally(() => {
               cartBtn.disabled = false;
               cartBtn.style.opacity = '';
-            }, 500);
-          })
-          .catch((error) => {
-            console.error('Error adding to cart:', error);
-            cartBtn.disabled = false;
-            cartBtn.style.opacity = '';
-            alert('Error adding product to cart. Please try again.');
-          });
-        return;
+            });
+          return;
+        }
+      });
+
+      function closeModal() {
+        modalOverlay.classList.add('hidden');
+        document.body.style.overflow = '';
       }
-    });
 
-    function closeModal() {
-      modalOverlay.classList.add('hidden');
-      document.body.style.overflow = '';
-    }
-
-    if (modalClose) {
-      modalClose.addEventListener('click', closeModal);
-    }
-
-    modalOverlay.addEventListener('click', function (e) {
-      if (e.target === modalOverlay) {
-        closeModal();
+      if (modalClose) {
+        modalClose.addEventListener('click', closeModal);
       }
-    });
 
-    document.addEventListener('keydown', function (e) {
-      if (e.key === 'Escape' && !modalOverlay.classList.contains('hidden')) {
-        closeModal();
-      }
-    });
-  })();
-</script>
+      modalOverlay.addEventListener('click', function (e) {
+        if (e.target === modalOverlay) {
+          closeModal();
+        }
+      });
+
+      document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape' && !modalOverlay.classList.contains('hidden')) {
+          closeModal();
+        }
+      });
+    })();
+  </script>
+{%- endif -%}
 
 {% schema %}
 {
